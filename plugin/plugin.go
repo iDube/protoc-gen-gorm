@@ -2749,6 +2749,13 @@ func (b *ORMBuilder) followsUpdateSetConventions(inType *protogen.Message, outTy
 			inEntity = field
 		}
 
+		if field == nil || field.Desc == nil || field.Desc.Message() == nil {
+			return false, "", ""
+		}
+		if field.Desc.Message().FullName() == "" {
+			return false, "", ""
+		}
+
 		if string(field.Desc.Message().FullName()) == "google.protobuf.FieldMask" {
 			if inFieldMask != nil {
 				fmt.Fprintf(os.Stderr, "message must not contains double field mask, prev on field name %s, after on field %s.\n", inFieldMask.GoName, field.GoName)
